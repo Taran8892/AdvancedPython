@@ -1,23 +1,40 @@
+from pkgutil import read_code
+from random import randint
+
 class Point():
 
     def __init__(self, x, y):
-        print("point created")
         self.x = x
         self.y = y
     
-    def falls_in_rectangle(self, lowerLeft, UpperRight):
+    def falls_in_rectangle(self, rectangle):
         # ((5,6),(7,9))
-        if lowerLeft[0] < self.x < UpperRight[0] and lowerLeft[1] < self.y < UpperRight[1]:
+        if rectangle.lowleft.x < self.x < rectangle.upright.x and rectangle.lowleft.y < self.y < rectangle.upright.y:
             return True
         else:
             return False
+
+class Rectangle():
+
+    def __init__(self, lowleft, upright):
+        self.lowleft = lowleft
+        self.upright = upright
     
-    def distance_from_point(self, x, y):
-        return ((y - self.y)**2 + (x - self.x)**2)**0.5
+    def area(self, area):
+        if area == (((self.upright.y - self.lowleft.y)**2)**0.5) * (((self.upright.x - self.lowleft.x)**2)**0.5):
+            return "Correct"
+        else:
+            return f"Wrong!! The correct area is {(((self.upright.y - self.lowleft.y)**2)**0.5) * (((self.upright.x - self.lowleft.x)**2)**0.5)}"
 
 
+rectangle = Rectangle(Point(randint(0,9), randint(0,9)), Point(randint(10,19), randint(10,19)))
 
-point1 = Point(6,7)
+print("Rectangle Coordinates: ", rectangle.lowleft.x, ",", rectangle.lowleft.y, "and", rectangle.upright.x, ",",rectangle.upright.y )
 
-print(point1.falls_in_rectangle((5,6),(7,9)))
-print(point1.distance_from_point(9, 9))
+user_input = Point(int(input("Guess X: ")), int(input("Guess Y: ")))
+
+print("Your point was inside rectangle: ", user_input.falls_in_rectangle(rectangle))
+
+user_area = int(input("Calculate the area: "))
+print(rectangle.area(user_area))
+
