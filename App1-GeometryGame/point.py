@@ -1,5 +1,6 @@
 from pkgutil import read_code
 from random import randint
+import turtle
 
 class Point():
 
@@ -14,6 +15,14 @@ class Point():
         else:
             return False
 
+class GuiPoint(Point):
+
+    def draw(self, canvas, size=5, color='red'):
+        canvas.penup()
+        canvas.goto(self.x, self.y)
+        canvas.pendown()
+        canvas.dot(size, color)
+
 class Rectangle():
 
     def __init__(self, lowleft, upright):
@@ -24,17 +33,38 @@ class Rectangle():
         if area == (((self.upright.y - self.lowleft.y)**2)**0.5) * (((self.upright.x - self.lowleft.x)**2)**0.5):
             return "Correct"
         else:
-            return f"Wrong!! The correct area is {(((self.upright.y - self.lowleft.y)**2)**0.5) * (((self.upright.x - self.lowleft.x)**2)**0.5)}"
+            return "Wrong!! The correct area is ", (((self.upright.y - self.lowleft.y)**2)**0.5) * (((self.upright.x - self.lowleft.x)**2)**0.5)
 
 
-rectangle = Rectangle(Point(randint(0,9), randint(0,9)), Point(randint(10,19), randint(10,19)))
+class GuiRectangle(Rectangle):
 
-print("Rectangle Coordinates: ", rectangle.lowleft.x, ",", rectangle.lowleft.y, "and", rectangle.upright.x, ",",rectangle.upright.y )
+    def draw(self, canvas):
+        canvas.penup()
+        canvas.goto(self.lowleft.x, self.lowleft.y)
+        canvas.pendown()
+        canvas.forward(self.upright.x - self.lowleft.x)
+        canvas.left(90)
+        canvas.forward(self.upright.y - self.lowleft.y)
+        canvas.left(90)
+        canvas.forward(self.upright.x - self.lowleft.x)
+        canvas.left(90)
+        canvas.forward(self.upright.y - self.lowleft.y)
 
-user_input = Point(int(input("Guess X: ")), int(input("Guess Y: ")))
+
+rectangle = GuiRectangle(Point(randint(0,400), randint(0,400)), Point(randint(10,400), randint(10,400)))
+
+print("Rectangle Coordinates: ", rectangle.lowleft.x, rectangle.lowleft.y, "and", rectangle.upright.x,rectangle.upright.y )
+
+user_input = GuiPoint(int(input("Guess X: ")), int(input("Guess Y: ")))
 
 print("Your point was inside rectangle: ", user_input.falls_in_rectangle(rectangle))
 
 user_area = int(input("Calculate the area: "))
 print(rectangle.area(user_area))
+
+myturtle = turtle.Turtle()
+rectangle.draw(myturtle)
+user_input.draw(myturtle)
+
+turtle.done()
 
